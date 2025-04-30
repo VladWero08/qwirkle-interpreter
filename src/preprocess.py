@@ -6,4 +6,9 @@ def board_preprocess(image: np.ndarray) -> np.ndarray:
     blurred = cv.medianBlur(gray, 11)
     threshold = cv.adaptiveThreshold(blurred, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY_INV, blockSize=15, C=2)
 
-    return threshold
+    # apply morphological operations to close small gaps and
+    # unify the outer structure
+    kernel = cv.getStructuringElement(cv.MORPH_RECT, (15, 15))
+    closed = cv.morphologyEx(threshold, cv.MORPH_CLOSE, kernel)
+
+    return closed
