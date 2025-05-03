@@ -1,8 +1,32 @@
+import os
 import cv2 as cv
 import numpy as np
 
 from src.preprocess import board_preprocess
 from src.helpers import show_image
+from src.tiles_extraction import get_similarity_sift, TWO_TOP_LEFT
+
+QUADRANT_1 = np.array([
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 2, 0, 0, 0, 0, 1, 0],
+    [0, 0, 0, 0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 1, 0, 0, 0],
+    [0, 0, 0, 1, 0, 0, 0, 0],
+    [0, 0, 1, 0, 0, 0, 0, 0],
+    [0, 1, 0, 0, 0, 0, 2, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+])
+
+QUADRANT_2 = np.array([
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 1, 0, 0, 0, 0, 2, 0],
+    [0, 0, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 0, 0, 0],
+    [0, 0, 0, 0, 0, 1, 0, 0],
+    [0, 2, 0, 0, 0, 0, 1, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+])
 
 def get_largest_contour_corners(image: np.ndarray) -> np.ndarray:
     contours, _ = cv.findContours(image, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
@@ -83,3 +107,22 @@ def get_board(
     image_cropped = cv.warpPerspective(image, M, (width, height))
 
     return image_cropped
+
+
+def get_scoring_board(patches: np.ndarray) -> int:
+    scoring_board = []
+    quadrants = [(1, 1), (1, 9), (9, 1), (9, 9)]
+
+    for row, col in quadrants:
+        two_top_left = patches[16 * row + col]
+
+        if get_similarity_sift(two_top_left, TWO_TOP_LEFT) > 0.5:
+            scoring_board.append(QUADRANT_1)
+        else:
+            scoring_board.append(QUADRANT_2)
+
+    scoring_board = np.array(scoring_board)
+    scoring_board = np.array([np.hstack(scoring_board[:2]), np.hstack(scoring_board[2:])])
+    scoring_board = np.vstack(scoring_board)
+
+    return scoring_board
