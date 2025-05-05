@@ -12,7 +12,7 @@ def auto_canny(image, sigma=0.5):
     return cv.Canny(image, lower, upper)
 
 
-def board_preprocess(image: np.ndarray) -> np.ndarray:
+def board_edge_preprocess(image: np.ndarray) -> np.ndarray:
     gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
     blurred = cv.medianBlur(gray, 11)
     threshold = cv.adaptiveThreshold(blurred, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY_INV, blockSize=15, C=2)
@@ -25,10 +25,16 @@ def board_preprocess(image: np.ndarray) -> np.ndarray:
     return closed
 
 
-def tile_preprocess(tile: np.ndarray) -> np.ndarray:
+def board_tile_preprocess(board: np.ndarray) -> np.ndarray:
+    board = cv.cvtColor(board, cv.COLOR_BGR2GRAY)
+    board = cv.medianBlur(board, 7)
+
+    return board
+
+
+def tile_identification_preprocess(tile: np.ndarray) -> np.ndarray:
     tile = cv.cvtColor(tile, cv.COLOR_BGR2GRAY)
-    tile = cv.medianBlur(tile, 11)
+    tile = cv.medianBlur(tile, 9)
     _, tile = cv.threshold(tile, 0, 255, cv.THRESH_BINARY + cv.THRESH_OTSU)
-    # tile = auto_canny(tile)
 
     return tile

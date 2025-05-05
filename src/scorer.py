@@ -33,6 +33,7 @@ class Scorer:
                 if col_points != 0:
                     cols_marked.append(j)
 
+        # print("TP" + str(total_points))
         return total_points
 
     def get_row_points(
@@ -117,4 +118,5 @@ class Scorer:
             if self.board_scoring[i][j] == 1 or self.board_scoring[i][j] == 2:
                 bonus_points += self.board_scoring[i][j]
 
+        # print("BP" + str(bonus_points))
         return bonus_points
