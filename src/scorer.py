@@ -34,6 +34,7 @@ class Scorer:
                     total_points += col_points
                     cols_marked.append(j)
 
+        print(f"TP: {total_points}")
         return total_points
 
     def get_row_points(
@@ -61,7 +62,7 @@ class Scorer:
             j_left -= 1
 
         # go to the right part of the row
-        while j_right < 15 and board[i][j_right] is not None:
+        while j_right < 16 and board[i][j_right] is not None:
             line_score += 1
             j_right += 1
 
@@ -105,7 +106,7 @@ class Scorer:
             i_left -= 1
 
         # go to the right part of the row
-        while i_right < 15 and board[i_right][j] is not None:
+        while i_right < 16 and board[i_right][j] is not None:
             col_score += 1
             i_right += 1
 
@@ -136,4 +137,5 @@ class Scorer:
             if self.board_scoring[i][j] == 1 or self.board_scoring[i][j] == 2:
                 bonus_points += self.board_scoring[i][j]
 
+        print(f"BP: {bonus_points}")
         return bonus_points

@@ -135,9 +135,8 @@ def get_scoring_board(patches: np.ndarray) -> int:
 
     for row, col in quadrants:
         two_top_left = patches[16 * row + col]
-        # show_image(two_top_left)
 
-        if get_similarity_sift(two_top_left, TWO_TOP_LEFT) > 0.5:
+        if get_similarity_sift(two_top_left, TWO_TOP_LEFT) >= 0.4:
             scoring_board.append(QUADRANT_1)
         else:
             scoring_board.append(QUADRANT_2)
