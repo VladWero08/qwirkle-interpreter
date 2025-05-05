@@ -56,7 +56,7 @@ class Scorer:
         j_right = j + 1
         
         # go to the left part of the row
-        while j_left > 0 and board[i][j_left] is not None:
+        while j_left >= 0 and board[i][j_left] is not None:
             line_score += 1
             j_left -= 1
 
@@ -100,7 +100,7 @@ class Scorer:
         i_right = i + 1
 
         # go to the left part of the row
-        while i_left > 0 and board[i_left][j] is not None:
+        while i_left >= 0 and board[i_left][j] is not None:
             col_score += 1
             i_left -= 1
 

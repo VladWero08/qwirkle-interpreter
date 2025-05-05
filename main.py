@@ -10,7 +10,7 @@ from src.helpers import show_image
 COL_MAP = {i: chr(ord("A") + i) for i in range(16)}
 SHAPE_MAP = {"circle": 1, "flower": 2, "diamond": 3, "square": 4, "star": 5, "sun": 6}
 COLOR_MAP = {"red": "R", "blue": "B", "green": "G", "yellow": "Y", "orange": "O", "white": "W"}
-GAMES = [i for i in range(1, 6) if i != 2]
+GAMES = [i for i in range(1, 6)]
 MOVES_PER_GAME = 20
 PADDING = 50
 
@@ -87,13 +87,3 @@ def interpret_game() -> None:
 
 if __name__ == "__main__":
     interpret_game()
-
-    for game in GAMES:
-        my_outputs = [f"{OUTPUT_DIR}{game}_{i:02d}.txt" for i in range(1, MOVES_PER_GAME + 1)]
-        outputs = [f"{INPUT_DIR}{game}_{i:02d}.txt" for i in range(1, MOVES_PER_GAME + 1)]#
-        for idx, _ in enumerate(outputs):
-            with open(my_outputs[idx], "r+") as f:
-                print(f.readlines())
-            with open(outputs[idx], "r+") as g:
-                print(g.readlines())
-            print()
