@@ -182,19 +182,19 @@ def get_board_tiles_positions(
 
         for pt in zip(*loc[::-1]):
             center = (pt[1] + h // 2 - padding, pt[0] + w // 2 - padding)
-            patch = (center[0] // 100, center[1] // 100)
-
-            # cv.rectangle(board_copy, pt, (pt[0] + w, pt[1] + h), 255, 2)
-            matched_tiles.add(patch)
+            
+            if 10 < center[0] % 100 < 90 and 10 < center[1] % 100 < 90: 
+                patch = (center[0] // 100, center[1] // 100)
+                # cv.rectangle(board_copy, pt, (pt[0] + w, pt[1] + h), 255, 2)
+                matched_tiles.add(patch)
 
     # show_image(board_copy)
 
-    try:
-        for (i, j) in matched_tiles:
+    for (i, j) in matched_tiles:
+        try:
             board_tiles[i][j] = 1
-    except IndexError as e:
-        print(i, j, "failed")
-
+        except IndexError as e:
+            continue
 
     return board_tiles
 
