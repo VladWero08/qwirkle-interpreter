@@ -172,7 +172,6 @@ def get_board_tiles_positions(
     threshold: float = 0.7,
 ) -> set:
     board = board_tile_preprocess(board)
-    # board_copy = board.copy()
     board_tiles = [[0 for i in range(NO_OF_TILES_PER_COL)] for j in range(NO_OF_TILES_PER_ROW)]
     matched_tiles = set()
 
@@ -186,10 +185,7 @@ def get_board_tiles_positions(
             
             if 10 < center[0] % 100 < 90 and 10 < center[1] % 100 < 90: 
                 patch = (center[0] // 100, center[1] // 100)
-                # cv.rectangle(board_copy, pt, (pt[0] + w, pt[1] + h), 255, 2)
                 matched_tiles.add(patch)
-
-    # show_image(board_copy)
 
     for (i, j) in matched_tiles:
         try:
