@@ -12,9 +12,9 @@ def auto_canny(image, sigma=0.5):
     return cv.Canny(image, lower, upper)
 
 
-def board_edge_preprocess(image: np.ndarray) -> np.ndarray:
+def board_edge_preprocess(image: np.ndarray, blur: int = 11) -> np.ndarray:
     gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
-    blurred = cv.medianBlur(gray, 11)
+    blurred = cv.medianBlur(gray, blur)
     threshold = cv.adaptiveThreshold(blurred, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY_INV, blockSize=15, C=2)
 
     # apply morphological operations to close small gaps and

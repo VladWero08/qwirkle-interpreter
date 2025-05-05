@@ -102,9 +102,10 @@ def get_board(
     width: int = 1600,
     height: int = 1600,
     padding: int = 0,    
+    blur: int = 11,
 ) -> np.ndarray:
     # get the preprocessed image, gray scaled, thresholded
-    threshold = board_edge_preprocess(image)
+    threshold = board_edge_preprocess(image, blur)
 
     # add the padding to the width and height of the cropp
     width = width + 2 * padding
@@ -134,6 +135,7 @@ def get_scoring_board(patches: np.ndarray) -> int:
 
     for row, col in quadrants:
         two_top_left = patches[16 * row + col]
+        # show_image(two_top_left)
 
         if get_similarity_sift(two_top_left, TWO_TOP_LEFT) > 0.5:
             scoring_board.append(QUADRANT_1)

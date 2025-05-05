@@ -5,16 +5,18 @@ import shutil
 from src.board import get_board, get_scoring_board, get_board_tiles_positions, get_board_tile_type_initial, get_board_simple_shapes
 from src.tiles import get_patches, get_different_tiles, get_tile_type, get_different_tiles, get_tile_color
 from src.scorer import Scorer
+from src.helpers import show_image
 
 COL_MAP = {i: chr(ord("A") + i) for i in range(16)}
 SHAPE_MAP = {"circle": 1, "flower": 2, "diamond": 3, "square": 4, "star": 5, "sun": 6}
 COLOR_MAP = {"red": "R", "blue": "B", "green": "G", "yellow": "Y", "orange": "O", "white": "W"}
-GAMES = [i for i in range(1, 5)]
+GAMES = [i for i in range(1, 6) if i != 2]
+# GAMES = [2]
 MOVES_PER_GAME = 20
 PADDING = 50
 
 INPUT_DIR = "./train/"
-OUTPUT_DIR = "./Olaeriu_Vlad_407/"
+OUTPUT_DIR = "./Olaeriu_Vlad_Mihai_407/"
 
 def interpret_game() -> None:
     if os.path.exists(OUTPUT_DIR):
@@ -49,7 +51,7 @@ def interpret_game() -> None:
             # read the board corresponding to the current move
             # and extract the patches with tiles
             image = cv.imread(move_path)
-            board = get_board(image)
+            board = get_board(image, blur=7)
             board_padded = get_board(image, padding=PADDING)
             board_tiles_pos_next = get_board_tiles_positions(board_padded, padding=PADDING)
             patches_next = get_patches(board)
@@ -86,3 +88,13 @@ def interpret_game() -> None:
 
 if __name__ == "__main__":
     interpret_game()
+
+    for game in GAMES:
+        my_outputs = [f"{OUTPUT_DIR}{game}_{i:02d}.txt" for i in range(1, MOVES_PER_GAME + 1)]
+        outputs = [f"{INPUT_DIR}{game}_{i:02d}.txt" for i in range(1, MOVES_PER_GAME + 1)]#
+        for idx, _ in enumerate(outputs):
+            with open(my_outputs[idx], "r+") as f:
+                print(f.readlines())
+            with open(outputs[idx], "r+") as g:
+                print(g.readlines())
+            print()
