@@ -48,6 +48,10 @@ NO_OF_TILES_PER_COL = 16
 
 
 def get_largest_contour_corners(image: np.ndarray) -> np.ndarray:
+    """
+    Extract the largest 4-cornered contour from the thresholded image.
+    Assumes the board outline is the largest rectangle in the image.
+    """
     contours, _ = cv.findContours(image, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
     max_area = 0
 
@@ -69,6 +73,10 @@ def get_largest_contour_corners(image: np.ndarray) -> np.ndarray:
 
 
 def get_padded_corners(corners: np.ndarray, image: np.ndarray, padding: int = 50) -> np.ndarray:
+    """
+    Add padding to each of the detected corners while keeping them within image bounds.
+    Ensures the cropped area includes some margin around the board.
+    """
     # get the maximum number of pixels
     # on both X and Y axis
     img_x_max = image.shape[1]; img_y_max = image.shape[0]
@@ -84,6 +92,15 @@ def get_padded_corners(corners: np.ndarray, image: np.ndarray, padding: int = 50
 
 
 def get_ordered_corners(corners: np.ndarray) -> np.ndarray:
+    """
+    Order the four corners as: top-left, top-right, bottom-right, bottom-left.
+    Uses sums and differences of coordinates to determine position.
+
+    Returns:
+    --------
+    corners: np.ndarray
+        Ordered corners frop top-left to bottom-left, clock-wise.
+    """
     idx = np.zeros(4).astype(np.int8)
 
     summ = np.sum(corners, axis=1)
@@ -104,6 +121,15 @@ def get_board(
     padding: int = 0,    
     blur: int = 11,
 ) -> np.ndarray:
+    """
+    Detect and extract the board from the input image using perspective transformation.
+    Optionally adds padding and blur during preprocessing.
+    
+    Returns:
+    --------
+    board: np.ndarray:
+        Cropped and perspective transformed board.
+    """
     # get the preprocessed image, gray scaled, thresholded
     threshold = board_edge_preprocess(image, blur)
 
@@ -130,6 +156,10 @@ def get_board(
 
 
 def get_scoring_board(patches: np.ndarray) -> int:
+    """
+    Generate a board with scoring tile positions based on quadrant identification.
+    Uses SIFT-based similarity check to distinguish between two board quadrant layouts.
+    """
     scoring_board = []
     quadrants = [(1, 1), (1, 9), (9, 1), (9, 9)]
 
@@ -171,6 +201,10 @@ def get_board_tiles_positions(
     padding: int = 0,
     threshold: float = 0.7,
 ) -> set:
+    """
+    Identify positions of known tile shapes on the board using template matching.
+    Filters matches using a similarity threshold and geometric constraints.
+    """
     board = board_tile_preprocess(board)
     board_tiles = [[0 for i in range(NO_OF_TILES_PER_COL)] for j in range(NO_OF_TILES_PER_ROW)]
     matched_tiles = set()
@@ -202,6 +236,10 @@ def get_board_simple_shapes(
     threshold: float = 0.85,
     padding: int = 0,    
 ) -> dict:
+    """
+    Detect simple shape tiles (square, circle, diamond) on the board.
+    Returns a dictionary mapping tile coordinates to their shape names.
+    """
     board = board_tile_preprocess(board)
     positions = dict()
 

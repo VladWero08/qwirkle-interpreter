@@ -1,16 +1,6 @@
 import cv2 as cv
 import numpy as np
 
-from src.helpers import show_image
-
-def auto_canny(image, sigma=0.5):
-    v = np.median(image)
-    
-    lower = int(max(0, (1.0 - sigma) * v))
-    upper = int(min(255, (1.0 + sigma) * v))
-
-    return cv.Canny(image, lower, upper)
-
 
 def board_edge_preprocess(image: np.ndarray, blur: int = 11) -> np.ndarray:
     gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)

@@ -42,6 +42,15 @@ def get_patches(
     height: int = 1600,
     padding: int = 0, 
 ) -> np.ndarray:
+    """
+    Splits an image into a grid of patches corresponding to tiles, 
+    with optional padding around each patch.
+
+    Returns:
+    --------
+    patches: np.ndarray
+        A NumPy array of image patches extracted from the original image.
+    """
     # compute the patch width and height
     p_height = height // NO_OF_TILES_PER_ROW
     p_width = width // NO_OF_TILES_PER_COL
@@ -72,6 +81,15 @@ def get_similarity_sift(
     image_1: np.ndarray,
     image_2: np.ndarray
 ) -> float:
+    """
+    Computes the similarity between two images using SIFT features and
+    Lowe's ratio test for good feature matches.
+
+    Returns:
+    --------
+    similarity: float
+        A similarity score between the two images, ranging from 0.0 to 1.0.
+    """
     sift = cv.SIFT.create()
     bf = cv.BFMatcher()
 
@@ -100,6 +118,15 @@ def get_similarity_sift(
 
 
 def get_similarity_template_matching(tile: np.ndarray, template: np.ndarray) -> float:
+    """
+    Compares a tile image to a template using normalized cross-correlation 
+    template matching.
+
+    Returns:
+    --------
+    max_val: float
+        The maximum correlation value indicating similarity.
+    """
     result = cv.matchTemplate(tile, template, cv.TM_CCOEFF_NORMED)
     _, max_val, _, _ = cv.minMaxLoc(result)
 
@@ -107,6 +134,15 @@ def get_similarity_template_matching(tile: np.ndarray, template: np.ndarray) -> 
 
 
 def get_tile_shape(tile: np.ndarray) -> str:
+    """
+    Identifies the shape of a tile by comparing it to known tile templates
+    using both SIFT feature matching and template matching.
+
+    Returns:
+    --------
+    best_match_name: str
+        The name of the shape that best matches the input tile.
+    """
     tile = tile_identification_preprocess(tile)
 
     best_match = 0
@@ -138,6 +174,15 @@ def get_tile_shape(tile: np.ndarray) -> str:
 
 
 def get_tile_color(tile: np.ndarray) -> str:
+    """
+    Determines the dominant color of a tile by converting it to HSV
+    and analyzing predefined color ranges.
+
+    Returns:
+    --------
+    dominant_color: str
+        The name of the dominant color found in the tile.
+    """
     hsv = cv.cvtColor(tile, cv.COLOR_BGR2HSV)
     # initialize total mask and pixel count dictionary
     total_mask = np.zeros(hsv.shape[:2], dtype=np.uint8)
@@ -157,6 +202,14 @@ def get_tile_color(tile: np.ndarray) -> str:
 
 
 def get_tile_type(tile: np.ndarray) -> tuple[str]:
+    """
+    Determines the type of a tile by identifying both its shape and color.
+
+    Returns:
+    --------
+    (shape, color): tuple[str]
+        A tuple containing the shape and color of the tile.
+    """
     shape = get_tile_shape(tile)
     color = get_tile_color(tile)
 
@@ -168,6 +221,16 @@ def check_different_tiles(
     tile_to: np.ndarray,
     diff_threshold: int = 30,    
 ) -> bool:
+    """
+    Checks if two tiles are different by comparing their grayscale pixel values 
+    and computing the amount of pixel change beyond a set threshold.
+
+    Returns:
+    --------
+    is_different: bool
+        True if the tiles are considered different, otherwise False.
+    """
+
     if get_tile_color(tile_to) == "white":
         percentage = 0.6
     else:

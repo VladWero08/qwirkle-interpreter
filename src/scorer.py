@@ -5,6 +5,15 @@ class Scorer:
         self.board_scoring = board_scoring
 
     def get_points(self, board: np.ndarray, new_tiles: list[tuple]) -> int:
+        """
+        Computes total points scored on rows, columns and takes into consideration
+        the Qwirkle bonus as well.
+
+        Returns:
+        --------
+        points: int
+            Total points scored on the board.
+        """
         points = 0
         points += self.get_combination_points(board, new_tiles)
         points += self.get_bonus_points(new_tiles)
@@ -12,6 +21,15 @@ class Scorer:
         return points
 
     def get_combination_points(self, board: np.ndarray, new_tiles: list[tuple]) -> int:
+        """
+        Computes points scored on both rows and columns
+        for a given board and a list of new tiles that were added to the board.
+
+        Returns:
+        --------
+        points: int
+            Total score scored on rows and columns.
+        """
         # when points are computed based on a certain row / column,
         # it is added to these list to avoid repetition 
         total_points = 0
